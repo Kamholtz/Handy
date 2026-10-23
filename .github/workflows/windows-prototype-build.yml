@@ -1,0 +1,31 @@
+name: Windows Prototype Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag, or commit to build
+        required: true
+        type: string
+        default: main
+      debug:
+        description: Build a debug package instead of a release package
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build-windows:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: windows-latest
+      target: x86_64-pc-windows-msvc
+      build-args: ""
+      upload-artifacts: true
+      asset-prefix: handy-prototype
+      sign-binaries: false
+      is-debug-build: ${{ inputs.debug }}
+      ref: ${{ inputs.ref }}
+    secrets: inherit
